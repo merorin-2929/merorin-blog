@@ -1,6 +1,67 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 html {
     font-family: 'Work Sans', 'Noto Sans JP', sans-serif;
     scroll-behavior: smooth;
+}
+
+.lc-container {
+	@apply flex flex-col w-full border border-gray-400/50 rounded-sm !no-underline overflow-hidden mt-6 md:grid md:grid-cols-10;
+}
+
+.lc-container.lc-error {
+	@apply border-gray-300 bg-gray-50/30;
+}
+
+.lc-container.lc-invalid-url {
+	@apply border-gray-300 bg-gray-50/30;
+}
+
+.lc-info {
+	@apply flex flex-col justify-center gap-2 p-4 order-2 md:order-1 col-span-7;
+}
+
+.lc-title {
+	@apply font-bold overflow-ellipsis overflow-hidden line-clamp-2 leading-tight;
+}
+
+.lc-error-icon {
+	@apply text-sm opacity-70;
+}
+
+.lc-description {
+	@apply text-sm text-gray-600 line-clamp-2 overflow-ellipsis overflow-hidden;
+}
+
+.lc-description-error {
+	@apply text-gray-500 italic;
+}
+
+.lc-url-container {
+	@apply flex flex-row items-center end-0;
+}
+
+.lc-favicon {
+	@apply !mr-2 !m-0 !w-4 !h-4 !shadow-none;
+}
+
+.lc-url {
+	@apply text-xs text-gray-600 overflow-hidden overflow-ellipsis line-clamp-1;
+}
+
+.lc-image-container {
+	@apply flex flex-col col-span-3 items-center justify-center border-b border-gray-400/50 !h-full order-1 overflow-hidden !aspect-[16/9] md:order-2 md:border-l md:border-b-0 md:!w-[100%];
+}
+
+.lc-image {
+	@apply object-cover !m-0 h-full !w-full !shadow-none !rounded-none;
+}
+
+.lc-error-message {
+	@apply text-xs text-gray-500 mt-1 px-2 py-1 bg-gray-100 rounded border-l-2 border-gray-300;
+}
+
+.lc-container.lc-invalid-url .lc-error-message {
+	@apply text-gray-600 bg-gray-50 border-gray-300;
 }

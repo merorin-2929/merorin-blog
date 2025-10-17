@@ -1,0 +1,59 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import LinkCard from "../../components/LinkCard.astro"
+import { getCollection, render } from "astro:content";
+export async function getStaticPaths() {
+    const posts = await getCollection("blog");
+    return posts.map((post) => ({
+        params: { id: post.id },
+        props: { post },
+    }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout>
+    <main
+        class="pt-[72px] min-h-screen flex flex-col items-center justify-start"
+    >
+        <div class="w-full max-w-7xl mx-auto px-4 py-12">
+            <div class="flex flex-col items-center justify-center gap-6">
+                {
+                    post.data.image && (
+                        <img
+                            src={post.data.image}
+                            class="aspect-[21/9] object-cover w-full md:w-[90%] rounded-xl"
+                            loading="lazy"
+                        />
+                    )
+                }
+                <h1 class="text-3xl font-bold">{post.data.title}</h1>
+                <div class="text-center">
+                    {
+                        post.data.description && (
+                            <p class="text-sm text-gray-500">
+                                {post.data.description}
+                            </p>
+                        )
+                    }
+
+                    <p>
+                        <i class="ri-calendar-line mr-1"></i>
+                        {post.data.date.toLocaleDateString("ja-JP")}
+                    </p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                <div
+                    class="order-2 md:order-1 prose col-span-1 md:col-span-2 prose-img:rounded-xl min-w-full"
+                >
+                    <Content components={{ LinkCard }} />
+                </div>
+                <div class="order-1 md:order-2">
+                    目次が生えてきます。
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>

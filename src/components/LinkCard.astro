@@ -1,0 +1,84 @@
+---
+import { getOGP } from "../lib/getOGP";
+
+const { url } = Astro.props;
+const ogp = await getOGP(url);
+
+let displayUrl;
+let isError = false;
+let errorType = "";
+
+try {
+	const parsed = new URL(ogp.url);
+	displayUrl = parsed.hostname.replace(/^www\./, "");
+
+	// エラー状態の判定
+	isError = ogp.title === "リンクが無効です";
+
+	if (ogp.title === "リンクが無効です") {
+		errorType = "invalid-url";
+	}
+} catch {
+	displayUrl = ogp.url;
+	isError = true;
+	errorType = "invalid-url";
+}
+---
+
+<a
+	class:list={[
+		"lc-container",
+		isError && "lc-error",
+		errorType && `lc-${errorType}`,
+	]}
+	href={ogp.url}
+	target="_blank"
+	rel="noopener noreferrer"
+>
+	<div
+		class:list={[
+			"lc-info",
+			ogp.image ? "col-span-7" : "!col-span-10", // 画像なければ全幅に
+		]}
+	>
+		<div class="lc-title">
+			{ogp.title}
+			{isError && <span class="lc-error-icon">⚠️</span>}
+		</div>
+		{
+			ogp.description && (
+				<div
+					class:list={[
+						"lc-description",
+						isError && "lc-description-error",
+					]}
+				>
+					{ogp.description}
+				</div>
+			)
+		}
+		<div class="lc-url-container">
+			<img
+				class="lc-favicon"
+				src={ogp.favicon}
+				alt="favicon"
+				width="16"
+				height="16"
+			/>
+			<span class="lc-url">{displayUrl}</span>
+		</div>
+		{isError && <div class="lc-error-message">リンクが無効です</div>}
+	</div>
+	{
+		ogp.image && (
+			<div class="lc-image-container">
+				<img
+					class="lc-image"
+					src={ogp.image}
+					alt={ogp.title}
+					onerror="this.parentElement.style.display='none'"
+				/>
+			</div>
+		)
+	}
+</a>
