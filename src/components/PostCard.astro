@@ -1,0 +1,47 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+    post: CollectionEntry<'blog'>
+}
+const { post } = Astro.props;
+---
+
+<a
+    href=`/blog/${post.id}`
+    class="w-full flex flex-col overflow-hidden rounded-lg border border-gray-200"
+>
+    <div
+        class="w-full aspect-video bg-gray-200 border-b border-gray-200 flex items-center justify-center"
+    >
+        {
+            post.data.image ? (
+                <img
+                    src={post.data.image}
+                    alt={post.data.title}
+                    class="w-full h-full object-cover"
+                />
+            ) : (
+                <span class="text-gray-500">No Image!!</span>
+            )
+        }
+    </div>
+    <div class="p-4 flex flex-col">
+        <h3 class="text-lg font-bold line-clamp-2">{post.data.title}</h3>
+        {
+            post.data.description && (
+                <p class="text-sm text-gray-500 line-clamp-2">
+                    {post.data.description}
+                </p>
+            )
+        }
+        {
+            post.data.date && (
+                <div class="flex flex-row gap-2 items-center text-sm text-gray-500">
+                    <i class="ri-calendar-line" />
+                    <p>{post.data.date.toLocaleDateString("ja-JP")}</p>
+                </div>
+            )
+        }
+    </div>
+</a>

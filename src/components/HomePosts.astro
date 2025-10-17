@@ -1,10 +1,10 @@
 ---
 import { getCollection } from "astro:content";
-import { date, datetimeRegex, defaultErrorMap } from "astro:schema";
+import PostCard from "./PostCard.astro";
 const allPost = await getCollection("blog");
-const posts = (await getCollection("blog")).sort(
+const posts = allPost.sort(
     (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
+).slice(0,6);
 ---
 
 <section class="my-16 flex flex-col justify-center">
@@ -17,28 +17,7 @@ const posts = (await getCollection("blog")).sort(
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
             {
                 posts.map((post) => (
-                    <a
-                        href=`/blog/${post.id}`
-                        class="w-full flex flex-col overflow-hidden rounded-lg border border-gray-200"
-                    >
-                        <div class="w-full aspect-video bg-gray-200 border-b border-gray-200 flex items-center justify-center">
-                            {
-                                post.data.image ? <img src={post.data.image} class="w-full h-full object-cover" loading="lazy" /> : <span class="text-gray-500">No Image</span>
-                            }
-                        </div>
-                        <div class="p-4 flex flex-col">
-                            <div class="flex flex-row items-center gap-2">
-                                <i class="ri-calendar-line" />
-                                <p>{post.data.date.toLocaleDateString("ja-JP")}</p>
-                            </div>
-                            <h3 class="text-lg font-bold line-clamp-2">
-                                {post.data.title}
-                            </h3>
-                            <p class="text-sm text-gray-500 line-clamp-2">
-                                {post.data.description}
-                            </p>
-                        </div>
-                    </a>
+                    <PostCard post={post} />
                 ))
             }
         </div>

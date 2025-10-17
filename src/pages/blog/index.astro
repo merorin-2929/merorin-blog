@@ -1,0 +1,22 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { getCollection } from "astro:content";
+const allPost = await getCollection("blog");
+const posts = allPost.sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+---
+
+<Layout>
+    <section class="min-h-[calc(100vh-56px)] flex pt-[72px]">
+        <div
+            class="w-full max-w-7xl mx-auto flex flex-col justify-start items-center px-4 py-10"
+        >
+            <h2 class="text-4xl font-bold">Blog</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mt-8">
+                {posts.map((post) => <PostCard post={post} />)}
+            </div>
+        </div>
+    </section>
+</Layout>
