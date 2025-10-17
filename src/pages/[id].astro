@@ -1,9 +1,9 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import LinkCard from "../../components/LinkCard.astro"
+import Layout from "../layouts/Layout.astro";
+import LinkCard from "../components/LinkCard.astro";
 import { getCollection, render } from "astro:content";
 export async function getStaticPaths() {
-    const posts = await getCollection("blog");
+    const posts = await getCollection("page");
     return posts.map((post) => ({
         params: { id: post.id },
         props: { post },
@@ -12,22 +12,12 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 ---
-
 <Layout>
     <main
         class="pt-[72px] min-h-[calc(100vh-56px)] flex flex-col items-center justify-start"
     >
         <div class="w-full max-w-7xl mx-auto px-4 py-12">
             <div class="flex flex-col items-center justify-center gap-6">
-                {
-                    post.data.image && (
-                        <img
-                            src={post.data.image}
-                            class="aspect-[24/9] object-cover w-full md:w-[80%] rounded-xl shadow-2xl"
-                            loading="lazy"
-                        />
-                    )
-                }
                 <h1 class="text-3xl font-bold">{post.data.title}</h1>
                 <div class="text-center">
                     {

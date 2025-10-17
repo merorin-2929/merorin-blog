@@ -7,9 +7,19 @@ const blog = defineCollection({
         title: z.string(),
         description: z.string().optional(),
         date: z.date(),
-        draft: z.boolean().default(true),
+        draft: z.boolean().default(false),
         image: z.string().optional()
     })
 })
 
-export const collections = { blog }
+const page = defineCollection({
+    loader: glob({ pattern: "**/*.(md|mdx)", base: "./content/page" }),
+    schema: z.object({
+        title: z.string(),
+        description: z.string().optional(),
+        date: z.date(),
+        draft: z.boolean().default(false),
+    })
+})
+
+export const collections = { blog, page }
