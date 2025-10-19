@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 ---
-<Layout>
+<Layout pageTitle={post.data.title} description={post.data.description}>
     <main
         class="pt-[72px] min-h-[calc(100vh-56px)] flex flex-col items-center justify-start"
     >

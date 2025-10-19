@@ -2,13 +2,19 @@
 import Layout from "../../layouts/Layout.astro";
 import PostCard from "../../components/PostCard.astro";
 import { getCollection } from "astro:content";
-const allPost = await getCollection("blog");
+import type { CollectionEntry } from "astro:content";
+const allPost = await getCollection(
+    "blog",
+    ({ data }: { data: CollectionEntry<"blog">["data"] }) => {
+        return import.meta.env.DEV ? true : !data.draft;
+    },
+);
 const posts = allPost.sort(
     (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 ---
 
-<Layout>
+<Layout pageTitle="記事一覧">
     <section class="min-h-[calc(100vh-56px)] flex pt-[72px]">
         <div
             class="w-full max-w-7xl mx-auto flex flex-col justify-start items-center px-4 py-10"
