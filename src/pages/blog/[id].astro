@@ -23,7 +23,7 @@ const { Content } = await render(post);
                     post.data.image && (
                         <img
                             src={post.data.image}
-                            class="aspect-[24/9] object-cover w-full md:w-[80%] rounded-xl shadow-2xl"
+                            class="aspect-[21/9] object-cover w-full md:w-[80%] rounded-xl shadow-2xl"
                             loading="lazy"
                         />
                     )
@@ -42,6 +42,13 @@ const { Content } = await render(post);
                         <i class="ri-calendar-line mr-1"></i>
                         {post.data.date.toLocaleDateString("ja-JP")}
                     </p>
+                    <div class="flex gap-2 mt-2">
+                        {
+                            post.data.tags.map((tag)=>(
+                                <a href=`/blog/tags/${tag}` class="px-3 py-1 bg-gray-200/50 rounded-full"><i class="ri-price-tag-3-line"></i> {tag}</a>
+                            )).slice(0,3)
+                        }
+                    </div>
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">

@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../../layouts/Layout.astro";
+import PostCard from "../../../components/PostCard.astro";
+import type { CollectionEntry } from "astro:content";
+
+export async function getStaticPaths() {
+    const posts = await getCollection('blog',
+        ({ data }: { data: CollectionEntry<"blog">["data"] }) => {
+            return import.meta.env.DEV ? true : !data.draft;
+        }
+    );
+    const allTags = [...new Set(posts.flatMap(p => p.data.tags))];
+    return allTags.map(tag => ({
+        params: { tag },
+        props: { tag },
+    }));
+}
+
+const { tag } = Astro.props;
+const posts = await getCollection("blog");
+const taggedPosts = posts.filter(post => post.data.tags.includes(tag));
+---
+<Layout pageTitle=`「${tag}」が付けられた記事一覧`>
+    <section class="min-h-[calc(100vh-56px)] flex pt-[72px]">
+        <div
+            class="w-full max-w-7xl mx-auto flex flex-col justify-start items-center px-4 py-10"
+        >
+            <h2 class="text-4xl font-bold">#{tag}</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mt-8">
+                {taggedPosts.map((post) => <PostCard post={post} />)}
+            </div>
+        </div>
+    </section>
+</Layout>
