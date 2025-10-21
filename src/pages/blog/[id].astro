@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import LinkCard from "../../components/LinkCard.astro"
 import { getCollection, render } from "astro:content";
+import TableOfContent from "../../components/TableOfContent.astro";
 export async function getStaticPaths() {
     const posts = await getCollection("blog");
     return posts.map((post) => ({
@@ -10,7 +11,7 @@ export async function getStaticPaths() {
     }));
 }
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content,headings } = await render(post);
 ---
 
 <Layout pageTitle={post.data.title}>
@@ -45,7 +46,7 @@ const { Content } = await render(post);
                     <div class="flex gap-2 mt-2">
                         {
                             post.data.tags.map((tag)=>(
-                                <a href=`/blog/tags/${tag}` class="px-3 py-1 bg-gray-200/50 rounded-full"><i class="ri-price-tag-3-line"></i> {tag}</a>
+                                <a href={`/blog/tags/${tag}`} class="px-3 py-1 bg-gray-200/50 rounded-full"><i class="ri-price-tag-3-line"></i> {tag}</a>
                             )).slice(0,3)
                         }
                     </div>
@@ -58,7 +59,10 @@ const { Content } = await render(post);
                     <Content components={{ LinkCard }} />
                 </div>
                 <div class="order-1 md:order-2">
-                    目次が生えてきます。
+                    <div class="sticky md:top-[72px] md:max-h-[calc(100vh-88px)] overflow-y-auto py-4">
+                        <h2 class="font-medium text-lg mb-2">目次</h2>
+                        <TableOfContent headings={headings} />
+                    </div>
                 </div>
             </div>
         </div>

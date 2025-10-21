@@ -1,0 +1,64 @@
+---
+interface HeadingItem {
+    slug: string;
+    text: string;
+    depth: number;
+}
+
+interface Props {
+    headings: HeadingItem[];
+}
+
+const { headings } = Astro.props;
+
+const filtered = headings.filter((h) => h.depth === 2 || h.depth === 3);
+
+const buildTree = (
+    items: HeadingItem[],
+    startDepth = 2,
+): { item: HeadingItem; children: any[] }[] => {
+    const result: { item: HeadingItem; children: any[] }[] = [];
+    let stack = [...result];
+
+    const h2Groups: { h2: HeadingItem; h3s: HeadingItem[] }[] = [];
+    let currentGroup: { h2: HeadingItem; h3s: HeadingItem[] } | null = null;
+
+    for (const item of items) {
+        if (item.depth === 2) {
+            if (currentGroup) h2Groups.push(currentGroup);
+            currentGroup = { h2: item, h3s: [] };
+        } else if (item.depth === 3 && currentGroup) {
+            currentGroup.h3s.push(item);
+        }
+    }
+    if (currentGroup) h2Groups.push(currentGroup);
+
+    return h2Groups.map((group) => ({
+        item: group.h2,
+        children: group.h3s.map((h3) => ({ item: h3, children: [] })),
+    }));
+};
+
+const tocTree = buildTree(filtered);
+---
+
+<ul class="ml-1">
+    {
+        tocTree.map((node) => (
+            <li>
+                <a href={`#${node.item.slug}`} class="font-medium">{node.item.text}</a>
+                {node.children.length > 0 && (
+                    <ul class="ml-4 mt-1">
+                        {node.children.map((child) => (
+                            <li>
+                                <a href={`#${child.item.slug}`} class="text-sm text-gray-500">
+                                    {child.item.text}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </li>
+        ))
+    }
+</ul>
