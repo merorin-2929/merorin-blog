@@ -29,6 +29,10 @@ const title = pageTitle ? `${pageTitle} - MerorinBlog` : "MerorinBlog"
 		/>
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={image} />
+		<meta property="og:locale" content="ja_JP" />
 		<title>{title}</title>
 	</head>
 	<body>

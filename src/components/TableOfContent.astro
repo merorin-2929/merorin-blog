@@ -46,7 +46,7 @@ const tocTree = buildTree(filtered);
     {
         tocTree.map((node) => (
             <li>
-                <a href={`#${node.item.slug}`} class="font-medium">{node.item.text}</a>
+                <a href={`#${node.item.slug}`} class="font-medium text-gray-700">{node.item.text}</a>
                 {node.children.length > 0 && (
                     <ul class="ml-4 mt-1">
                         {node.children.map((child) => (
